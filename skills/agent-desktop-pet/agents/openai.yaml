@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent 桌宠"
+  short_description: "替换桌宠素材，并为自定义 IP 准备动画提示词。"
+  default_prompt: "我有一个卡通 IP，帮我先生成静态首帧图提示词，再生成视频提示词；等我给你 MOV 路径后，帮我转成桌宠可用的 WebM。"

@@ -1,0 +1,65 @@
+{
+  "schema": "agent-desktop-pet-state-map/v1",
+  "assetBase": "./",
+  "defaultState": "paused",
+  "states": {
+    "working": {
+      "label": "任务进行中",
+      "file": "./任务进行中_无缝循环",
+      "loop": true,
+      "eventAliases": [
+        "agent.task.running",
+        "agent.task.started",
+        "agent.task.progress",
+        "agent.tool.running",
+        "agent.response.streaming"
+      ]
+    },
+    "done": {
+      "label": "任务完成",
+      "file": "./任务完成",
+      "loop": false,
+      "holdMs": 4200,
+      "autoReturnTo": "paused",
+      "eventAliases": [
+        "agent.task.done",
+        "agent.task.completed",
+        "agent.output.ready"
+      ]
+    },
+    "failed": {
+      "label": "任务失败",
+      "file": "./任务失败",
+      "loop": false,
+      "holdMs": 4200,
+      "autoReturnTo": "paused",
+      "eventAliases": [
+        "agent.task.failed",
+        "agent.task.error",
+        "agent.tool.error"
+      ]
+    },
+    "paused": {
+      "label": "任务暂停/休息",
+      "file": "./任务暂停_休息_无缝循环",
+      "loop": true,
+      "eventAliases": [
+        "agent.waiting.user",
+        "agent.waiting.approval",
+        "agent.task.paused",
+        "agent.idle",
+        "agent.blocked"
+      ]
+    },
+    "water": {
+      "label": "喝水提醒",
+      "file": "./喝水提醒",
+      "loop": false,
+      "holdMs": 120000,
+      "autoReturnTo": "working",
+      "eventAliases": [
+        "reminder.water.hourly"
+      ]
+    }
+  }
+}

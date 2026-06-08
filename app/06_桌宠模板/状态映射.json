@@ -1,0 +1,170 @@
+{
+  "schema": "azhen-desktop-pet-state-map/v1",
+  "project": "阿真Agent桌宠状态素材",
+  "assetBase": "../05_透明素材/",
+  "defaultState": "working",
+  "video": {
+    "width": 960,
+    "height": 960,
+    "fps": 24,
+    "durationSeconds": 4.04,
+    "format": "vp9-webm-alpha"
+  },
+  "states": {
+    "working": {
+      "label": "任务进行中",
+      "processStatus": [
+        "running",
+        "streaming",
+        "tool_running",
+        "progress"
+      ],
+      "file": "../05_透明素材/任务进行中_无缝循环.webm",
+      "loop": true,
+      "eventAliases": [
+        "agent.task.started",
+        "agent.task.running",
+        "agent.task.progress",
+        "agent.response.streaming",
+        "agent.tool.running",
+        "codex.task.started",
+        "codex.task.running",
+        "codex.turn.running",
+        "codex.response.streaming",
+        "codex.tool.running",
+        "codex.exec.running",
+        "claude.task.started",
+        "claude.task.running",
+        "claude.response.streaming",
+        "claude.tool.running",
+        "claude_code.task.running",
+        "claudecode.task.running"
+      ]
+    },
+    "done": {
+      "label": "任务完成",
+      "processStatus": [
+        "completed",
+        "done",
+        "output_ready"
+      ],
+      "file": "../05_透明素材/任务完成.webm",
+      "loop": true,
+      "holdMs": 120000,
+      "autoReturnTo": "paused",
+      "eventAliases": [
+        "agent.task.done",
+        "agent.task.completed",
+        "agent.output.ready",
+        "codex.task.done",
+        "codex.task.completed",
+        "codex.turn.completed",
+        "codex.response.completed",
+        "codex.output.ready",
+        "claude.task.done",
+        "claude.task.completed",
+        "claude.response.completed",
+        "claude.output.ready",
+        "claude_code.task.completed",
+        "claudecode.task.completed"
+      ]
+    },
+    "failed": {
+      "label": "任务失败",
+      "processStatus": [
+        "failed",
+        "error"
+      ],
+      "file": "../05_透明素材/任务失败.webm",
+      "loop": false,
+      "holdMs": 4200,
+      "autoReturnTo": "paused",
+      "eventAliases": [
+        "agent.task.failed",
+        "agent.task.error",
+        "agent.tool.error",
+        "codex.task.failed",
+        "codex.task.error",
+        "codex.tool.error",
+        "codex.exec.failed",
+        "claude.task.failed",
+        "claude.task.error",
+        "claude.tool.error",
+        "claude_code.task.failed",
+        "claudecode.task.failed"
+      ]
+    },
+    "paused": {
+      "label": "任务暂停",
+      "processStatus": [
+        "paused",
+        "idle",
+        "waiting_user",
+        "waiting_approval",
+        "blocked"
+      ],
+      "file": "../05_透明素材/任务暂停_无缝循环.webm",
+      "loop": true,
+      "eventAliases": [
+        "agent.task.paused",
+        "agent.waiting.user",
+        "agent.waiting.approval",
+        "agent.idle",
+        "agent.blocked",
+        "codex.task.paused",
+        "codex.waiting.user",
+        "codex.waiting.approval",
+        "codex.goal.blocked",
+        "codex.idle",
+        "claude.task.paused",
+        "claude.waiting.user",
+        "claude.waiting.approval",
+        "claude.needs_input",
+        "claude.idle",
+        "claude_code.waiting.user",
+        "claudecode.waiting.user"
+      ]
+    },
+    "water": {
+      "label": "喝水提醒",
+      "processStatus": [
+        "scheduled_reminder"
+      ],
+      "file": "../05_透明素材/喝水提醒.webm",
+      "loop": false,
+      "holdMs": 4200,
+      "autoReturnTo": "working",
+      "eventAliases": [
+        "reminder.water.hourly"
+      ]
+    },
+    "rest": {
+      "enabled": true,
+      "state": "paused",
+      "timeRanges": [
+        {
+          "start": "12:00",
+          "end": "13:00"
+        }
+      ]
+    }
+  },
+  "reminders": {
+    "water": {
+      "enabled": true,
+      "intervalMinutes": 60,
+      "state": "water",
+      "workHours": {
+        "start": "09:00",
+        "end": "18:00"
+      }
+    }
+  },
+  "qualityNotes": {
+    "working": "以 Seedance 2.0 版任务进行中视频为准，桌宠运行时使用 ping-pong 无缝循环版。",
+    "done": "绿色对勾需要保留，透明导出使用圆牌保护式抠绿，不能强抠绿。",
+    "water": "透明杯壁容易保留绿幕污染，已使用内部绿色去污染后处理。",
+    "paused": "桌宠运行时使用 ping-pong 无缝循环版。",
+    "alpha": "WebM alpha 预览请优先使用 VP9/libvpx 解码。"
+  }
+}

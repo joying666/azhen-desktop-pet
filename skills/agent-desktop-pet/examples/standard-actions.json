@@ -1,0 +1,52 @@
+{
+  "project": "自定义Agent桌宠",
+  "ratio": "1:1",
+  "background": "绿幕或透明背景",
+  "actions": [
+    {
+      "id": "working",
+      "filename": "任务进行中_无缝循环",
+      "label": "任务进行中",
+      "trigger": "Agent 正在处理任务",
+      "loop": true,
+      "scene": "角色在原地做专注工作动作",
+      "motion": "小幅循环动作，适合长时间显示"
+    },
+    {
+      "id": "done",
+      "filename": "任务完成",
+      "label": "任务完成",
+      "trigger": "Agent 完成任务",
+      "loop": false,
+      "scene": "角色在原地做完成反馈动作",
+      "motion": "短动作，结束时画面清晰稳定"
+    },
+    {
+      "id": "failed",
+      "filename": "任务失败",
+      "label": "任务失败",
+      "trigger": "Agent 任务失败",
+      "loop": false,
+      "scene": "角色在原地做失败或提醒动作",
+      "motion": "短动作，结束时画面清晰稳定"
+    },
+    {
+      "id": "paused",
+      "filename": "任务暂停_休息_无缝循环",
+      "label": "任务暂停/休息",
+      "trigger": "Agent 等待用户、暂停或空闲",
+      "loop": true,
+      "scene": "角色原地休息或待命",
+      "motion": "小幅呼吸、眨眼或休息循环"
+    },
+    {
+      "id": "water",
+      "filename": "喝水提醒",
+      "label": "喝水提醒",
+      "trigger": "工作时间提醒喝水",
+      "loop": false,
+      "scene": "角色做喝水提醒动作",
+      "motion": "短动作，适合显示 1 到 2 分钟后回到工作状态"
+    }
+  ]
+}
