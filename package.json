@@ -8,6 +8,7 @@
   "scripts": {
     "start": "electron .",
     "check": "node --check app/main.js && node --check app/preload.js && node --check app/桌宠运行时.js",
+    "test:runtime": "node app/runtime-loop.test.js",
     "dist": "electron-builder --publish never",
     "dist:mac": "electron-builder --mac --publish never",
     "dist:win": "electron-builder --win portable --publish never"

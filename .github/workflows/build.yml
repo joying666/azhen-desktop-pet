@@ -36,6 +36,9 @@ jobs:
       - name: Syntax check
         run: npm run check
 
+      - name: Runtime state loop tests
+        run: npm run test:runtime
+
       - name: Build Windows artifacts
         shell: pwsh
         run: |
@@ -98,33 +101,22 @@ jobs:
                 $null -ne $health.settings.hideOnFullScreen
             } | Out-Null
 
-            Wait-PetHealth -Description "renderer default working state" -Attempts 90 -Predicate {
-              param($health)
-              $health.state -eq "working" -and
-                $health.loop -eq $true
-            } | Out-Null
+            $assets = Invoke-RestMethod -Uri "http://127.0.0.1:17876/assets" -TimeoutSec 2
+            if ($assets.ok -ne $true -or
+                $assets.supportedExtensions -notcontains ".gif" -or
+                $assets.supportedExtensions -notcontains ".webp" -or
+                $assets.supportedExtensions -notcontains ".webm") {
+              throw "Packaged EXE did not expose the expected replaceable asset formats."
+            }
 
-            $stateCases = @(
-              @{ Event = "agent.task.running"; State = "working" },
-              @{ Event = "agent.task.done"; State = "done" },
-              @{ Event = "agent.task.failed"; State = "failed" },
-              @{ Event = "agent.waiting.user"; State = "paused" },
-              @{ Event = "reminder.water.hourly"; State = "water" }
-            )
+            $settingsOn = Invoke-RestMethod -Uri "http://127.0.0.1:17876/settings?hideOnFullScreen=1" -TimeoutSec 2
+            if ($settingsOn.settings.hideOnFullScreen -ne $true) {
+              throw "Packaged EXE did not enable hideOnFullScreen."
+            }
 
-            foreach ($stateCase in $stateCases) {
-              $eventName = [System.Uri]::EscapeDataString($stateCase.Event)
-              $eventResult = Invoke-RestMethod -Uri "http://127.0.0.1:17876/event?name=$eventName&manual=1" -TimeoutSec 2
-              if ($eventResult.ok -ne $true) {
-                throw "Manual event $($stateCase.Event) was rejected."
-              }
-
-              Wait-PetHealth -Description "manual state $($stateCase.State) loop lock" -Attempts 30 -DelayMs 500 -Predicate {
-                param($health)
-                $health.state -eq $stateCase.State -and
-                  $health.loop -eq $true -and
-                  $health.manualStateLock -eq $stateCase.State
-              } | Out-Null
+            $settingsOff = Invoke-RestMethod -Uri "http://127.0.0.1:17876/settings?hideOnFullScreen=0" -TimeoutSec 2
+            if ($settingsOff.settings.hideOnFullScreen -ne $false) {
+              throw "Packaged EXE did not disable hideOnFullScreen."
             }
 
             $ok = $true
