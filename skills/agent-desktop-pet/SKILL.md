@@ -25,7 +25,7 @@ description: 引导用户从一个卡通 IP 参考图开始制作 Agent 桌宠�
 | `paused` | Agent 空闲、等待、暂停、阻塞或休息 | `任务暂停_休息_无缝循环` |
 | `water` | 工作时间喝水提醒 | `喝水提醒` |
 
-支持扩展名：`.gif`、`.webp`、`.webm`、`.apng`、`.png`、`.mp4`。最推荐透明背景 `.webm`，同名素材优先级为 `.gif -> .webp -> .webm -> .apng -> .png -> .mp4`。
+支持扩展名：`.webm`、`.gif`、`.webp`、`.apng`、`.png`、`.mp4`。最推荐透明背景 `.webm`，同名素材优先级为 `.webm -> .gif -> .webp -> .apng -> .png -> .mp4`。
 
 静态生图阶段使用当前桌宠工程的图片文件名：
 

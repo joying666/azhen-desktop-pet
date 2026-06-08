@@ -43,7 +43,7 @@ const STANDARD_STATE_EVENTS = {
   paused: "agent.waiting.user",
   water: "reminder.water.hourly",
 };
-const ASSET_EXTENSIONS = [".gif", ".webp", ".webm", ".apng", ".png", ".mp4"];
+const ASSET_EXTENSIONS = [".webm", ".gif", ".webp", ".apng", ".png", ".mp4"];
 
 let mainWindow = null;
 let settingsWindow = null;
@@ -605,9 +605,10 @@ async function replaceAsset(stateKey) {
     title: `选择${config.label}素材`,
     properties: ["openFile"],
     filters: [
+      { name: "WebM 动图", extensions: ["webm"] },
       { name: "GIF 动图", extensions: ["gif"] },
       { name: "WebP 动图", extensions: ["webp"] },
-      { name: "桌宠素材", extensions: ["gif", "webp", "webm", "apng", "png", "mp4"] },
+      { name: "桌宠素材", extensions: ["webm", "gif", "webp", "apng", "png", "mp4"] },
       { name: "全部文件", extensions: ["*"] },
     ],
   });

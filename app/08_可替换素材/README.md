@@ -29,10 +29,10 @@
 桌宠会按这个优先级自动寻找文件：
 
 ```text
-.gif -> .webp -> .webm -> .apng -> .png -> .mp4
+.webm -> .gif -> .webp -> .apng -> .png -> .mp4
 ```
 
-如果你想用 GIF 或 WebP，把同名 `.gif` / `.webp` 放进来即可；它们会优先替换同名 `.webm`。设置页里每个状态也都可以单独选择 GIF 或 WebP 文件。
+如果你想用 GIF 或 WebP，把同名 `.gif` / `.webp` 放进来即可；但同名 `.webm` 会优先。设置页里每个状态也都可以单独选择 WebM、GIF 或 WebP 文件。
 
 ## 推荐格式
 

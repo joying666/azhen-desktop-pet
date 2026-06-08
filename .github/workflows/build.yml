@@ -103,6 +103,7 @@ jobs:
 
             $assets = Invoke-RestMethod -Uri "http://127.0.0.1:17876/assets" -TimeoutSec 2
             if ($assets.ok -ne $true -or
+                $assets.supportedExtensions[0] -ne ".webm" -or
                 $assets.supportedExtensions -notcontains ".gif" -or
                 $assets.supportedExtensions -notcontains ".webp" -or
                 $assets.supportedExtensions -notcontains ".webm") {
@@ -136,11 +137,69 @@ jobs:
             throw "Windows EXE did not start or did not expose a healthy desktop-pet endpoint."
           }
 
-      - name: Upload Windows artifacts
+      - name: Stage Windows EXE
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force release/windows | Out-Null
+          $exe = Get-ChildItem -Path dist -Filter "*.exe" | Select-Object -First 1
+          if (-not $exe) {
+            throw "No Windows EXE was built."
+          }
+          Copy-Item $exe.FullName "release/windows/阿真桌面宠物-Windows.exe"
+
+      - name: Upload Windows EXE
         uses: actions/upload-artifact@v4
         with:
-          name: azhen-desktop-pet-windows
-          path: |
-            dist/*.exe
-            dist/*.zip
-            dist/*.blockmap
+          name: 阿真桌面宠物-Windows-exe
+          path: release/windows/阿真桌面宠物-Windows.exe
+
+  build-macos:
+    name: macOS build
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          for i in 1 2 3; do
+            npm ci && exit 0
+            sleep $((20 * i))
+          done
+          exit 1
+
+      - name: Syntax check
+        run: npm run check
+
+      - name: Runtime state loop tests
+        run: npm run test:runtime
+
+      - name: Build macOS DMG
+        run: |
+          for i in 1 2 3; do
+            npm run dist:mac && exit 0
+            sleep $((20 * i))
+          done
+          exit 1
+
+      - name: Stage macOS DMG
+        run: |
+          mkdir -p release/macos
+          dmg="$(find dist -maxdepth 1 -name '*.dmg' -print -quit)"
+          if [ -z "$dmg" ]; then
+            echo "No macOS DMG was built."
+            exit 1
+          fi
+          cp "$dmg" "release/macos/阿真桌面宠物-macOS.dmg"
+
+      - name: Upload macOS DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: 阿真桌面宠物-macOS-dmg
+          path: release/macos/阿真桌面宠物-macOS.dmg

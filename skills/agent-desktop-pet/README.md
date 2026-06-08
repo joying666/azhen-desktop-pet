@@ -30,7 +30,7 @@
 | `任务暂停_休息_无缝循环.webm` | Agent 等待用户、暂停、空闲、休息 |
 | `喝水提醒.webm` | 工作时间提醒喝水 |
 
-也支持 `.gif`、`.webp`、`.apng`、`.png`、`.mp4`，但最推荐透明背景 `.webm`。同名素材优先级为 `.gif -> .webp -> .webm -> .apng -> .png -> .mp4`。
+也支持 `.gif`、`.webp`、`.apng`、`.png`、`.mp4`，但最推荐透明背景 `.webm`。同名素材优先级为 `.webm -> .gif -> .webp -> .apng -> .png -> .mp4`。
 
 静态生图阶段的图片文件名按当前桌宠工程格式：
 
