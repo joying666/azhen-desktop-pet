@@ -4,8 +4,8 @@
 
 ## 支持的平台
 
-- macOS: 本机可直接 `npm start` 运行，也可以用 GitHub Actions 构建 DMG/ZIP
-- Windows: 通过 GitHub Actions 的 Windows runner 构建 NSIS 安装包和 portable EXE
+- macOS: 本机可直接 `npm start` 运行，也可以本地构建 DMG/ZIP
+- Windows: 通过 GitHub Actions 的 Windows runner 构建 portable EXE
 
 ## 状态槽位
 
@@ -27,7 +27,7 @@
 .gif -> .webp -> .webm -> .apng -> .png -> .mp4
 ```
 
-每个状态都可以在设置页单独点击 `替换`，选择 GIF、WebP、WebM、APNG、PNG 或 MP4。手动切换状态后，该动作会保持并循环播放。
+每个状态都可以在设置页单独点击 `替换`，选择 GIF、WebP、WebM、APNG、PNG 或 MP4。手动切换状态后，该动作会保持并循环播放。设置页也可以选择全屏应用时是否隐藏桌宠。
 
 也可以用本地接口替换：
 

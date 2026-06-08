@@ -10,6 +10,7 @@ const DEFAULT_SETTINGS = {
   sizePx: 420,
   x: null,
   y: null,
+  hideOnFullScreen: false,
   stateHoldMs: {
     done: 4200,
     failed: 4200,
@@ -103,6 +104,7 @@ function normalizeSettings(settings) {
     sizePx: constrainSize(source.sizePx),
     x: Number.isFinite(Number(source.x)) ? Math.round(Number(source.x)) : null,
     y: Number.isFinite(Number(source.y)) ? Math.round(Number(source.y)) : null,
+    hideOnFullScreen: normalizeBool(source.hideOnFullScreen, DEFAULT_SETTINGS.hideOnFullScreen),
     stateHoldMs: {
       done: constrainHoldMs(hold.done, DEFAULT_SETTINGS.stateHoldMs.done),
       failed: constrainHoldMs(hold.failed, DEFAULT_SETTINGS.stateHoldMs.failed),
@@ -157,6 +159,9 @@ function applySettingsPatch(patch) {
   if (shouldResize) {
     userSettings.sizePx = constrainSize(patch.sizePx);
   }
+  if (Object.prototype.hasOwnProperty.call(patch, "hideOnFullScreen")) {
+    userSettings.hideOnFullScreen = normalizeBool(patch.hideOnFullScreen, userSettings.hideOnFullScreen);
+  }
   if (patch.stateHoldMs && typeof patch.stateHoldMs === "object") {
     userSettings.stateHoldMs = Object.assign({}, userSettings.stateHoldMs, patch.stateHoldMs);
   }
@@ -182,6 +187,7 @@ function applySettingsPatch(patch) {
     userSettings.x = updatedBounds.x;
     userSettings.y = updatedBounds.y;
   }
+  applyFullScreenVisibility();
   saveSettings();
   broadcastSettings();
   return userSettings;
@@ -189,6 +195,12 @@ function applySettingsPatch(patch) {
 
 function applySize(sizePx) {
   return applySettingsPatch({ sizePx });
+}
+
+function applyFullScreenVisibility() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: !userSettings.hideOnFullScreen });
+  mainWindow.setAlwaysOnTop(true, "floating");
 }
 
 function rememberWindowBounds() {
@@ -314,7 +326,7 @@ function createWindow() {
   });
 
   mainWindow.setAlwaysOnTop(true, "floating");
-  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  applyFullScreenVisibility();
   mainWindow.loadFile(path.join(__dirname, "桌宠桌面.html"));
   log("createWindow:loaded");
 
@@ -385,7 +397,7 @@ function showWaterPresentation(previousState) {
   );
 
   setWindowBoundsWithoutSaving(getCenteredBounds(targetSize, waterPresentationRestoreBounds));
-  mainWindow.setAlwaysOnTop(true, "floating");
+  applyFullScreenVisibility();
   mainWindow.showInactive();
 
   if (waterPresentationTimer) clearTimeout(waterPresentationTimer);
@@ -755,7 +767,13 @@ function createEventServer() {
         createSettingsWindow();
       }
       const size = url.searchParams.get("size") || url.searchParams.get("sizePx");
-      const settings = size ? applySize(size) : userSettings;
+      const hideOnFullScreen = url.searchParams.get("hideOnFullScreen");
+      const patch = {};
+      if (size) patch.sizePx = size;
+      if (hideOnFullScreen !== null) {
+        patch.hideOnFullScreen = ["1", "true", "yes", "on"].includes(String(hideOnFullScreen).toLowerCase());
+      }
+      const settings = Object.keys(patch).length ? applySettingsPatch(patch) : userSettings;
       response.writeHead(200, { "content-type": "application/json; charset=utf-8" });
       response.end(JSON.stringify({ ok: true, settings }));
       return;

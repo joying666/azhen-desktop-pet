@@ -234,6 +234,13 @@
 
     <section class="panel">
       <div class="row">
+        <label for="hideOnFullScreen">全屏应用时隐藏</label>
+        <input id="hideOnFullScreen" type="checkbox">
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="row">
         <h2>标准素材</h2>
         <button type="button" id="openAssets">打开文件夹</button>
       </div>
@@ -341,6 +348,7 @@
     const assetList = document.getElementById("assetList");
     const assetStatus = document.getElementById("assetStatus");
     const saveStatus = document.getElementById("saveStatus");
+    const hideOnFullScreen = document.getElementById("hideOnFullScreen");
 
     const doneSeconds = document.getElementById("doneSeconds");
     const failedSeconds = document.getElementById("failedSeconds");
@@ -379,6 +387,7 @@
       presetButtons.forEach((button) => {
         button.dataset.active = String(Number(button.dataset.size) === size);
       });
+      hideOnFullScreen.checked = Boolean(settings.hideOnFullScreen);
 
       doneSeconds.value = String(Math.round(Number(hold.done || 4200) / 100) / 10);
       failedSeconds.value = String(Math.round(Number(hold.failed || 4200) / 100) / 10);
@@ -476,6 +485,16 @@
       sizeSaveTimer = window.setTimeout(() => setSize(sizeRange.value), 300);
     }
 
+    function updateDisplayBehavior() {
+      showSaving();
+      window.desktopPet.updateSettings({
+        hideOnFullScreen: hideOnFullScreen.checked
+      }).then((settings) => {
+        renderSettings(settings);
+        showSaved();
+      });
+    }
+
     window.desktopPet.getSettings().then(renderSettings);
     window.desktopPet.getAssets().then(renderAssets);
     window.desktopPet.onSettings(renderSettings);
@@ -489,6 +508,9 @@
     presetButtons.forEach((button) => {
       button.addEventListener("click", () => setSize(button.dataset.size));
     });
+
+    hideOnFullScreen.addEventListener("input", updateDisplayBehavior);
+    hideOnFullScreen.addEventListener("change", updateDisplayBehavior);
 
     [
       doneSeconds,
