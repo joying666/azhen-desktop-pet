@@ -56,7 +56,7 @@
       const src = String(state.file || "");
       const next = isVideoFile(src) ? document.createElement("video") : document.createElement("img");
       next.className = "azhen-pet-video";
-      next.setAttribute("aria-label", "阿真桌宠");
+      next.setAttribute("aria-label", "阿真桌面宠物");
       next.draggable = false;
       if (next.tagName === "VIDEO") {
         next.muted = true;

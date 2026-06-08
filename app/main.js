@@ -632,7 +632,7 @@ function createSettingsWindow() {
     minimizable: false,
     maximizable: false,
     fullscreenable: false,
-    title: "阿真桌宠设置",
+    title: "阿真桌面宠物设置",
     backgroundColor: "#f6f8fb",
     alwaysOnTop: true,
     webPreferences: {
@@ -683,7 +683,7 @@ function showContextMenu() {
 function createMenu() {
   const template = [
     {
-      label: "阿真桌宠",
+      label: "阿真桌面宠物",
       submenu: [
         { label: "任务进行中", accelerator: "CommandOrControl+1", click: () => sendManualEvent("agent.task.running") },
         { label: "任务完成", accelerator: "CommandOrControl+2", click: () => sendManualEvent("agent.task.done") },

@@ -121,7 +121,7 @@ jobs:
 
             $ok = $true
           } finally {
-            Get-Process -Name "Azhen Desktop Pet" -ErrorAction SilentlyContinue |
+            Get-Process -Name "阿真桌面宠物", "Azhen Desktop Pet" -ErrorAction SilentlyContinue |
               Stop-Process -Force -ErrorAction SilentlyContinue
             if ($process -and -not $process.HasExited) {
               Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
@@ -130,7 +130,7 @@ jobs:
 
           if (-not $ok) {
             Get-CimInstance Win32_Process |
-              Where-Object { $_.Name -like "*Azhen*" -or $_.ExecutablePath -like "*Azhen Desktop Pet*" } |
+                Where-Object { $_.Name -like "*阿真桌面宠物*" -or $_.Name -like "*Azhen*" -or $_.ExecutablePath -like "*阿真桌面宠物*" -or $_.ExecutablePath -like "*Azhen Desktop Pet*" } |
               Select-Object ProcessId, Name, ExecutablePath, CommandLine |
               Format-List
             throw "Windows EXE did not start or did not expose a healthy desktop-pet endpoint."
