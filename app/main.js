@@ -44,6 +44,7 @@ const STANDARD_STATE_EVENTS = {
   water: "reminder.water.hourly",
 };
 const ASSET_EXTENSIONS = [".webm", ".gif", ".webp", ".apng", ".png", ".mp4"];
+const ASSET_FOLDER_NAME = "08_可替换素材";
 
 let mainWindow = null;
 let settingsWindow = null;
@@ -277,9 +278,36 @@ function findProjectRoot() {
   return path.resolve(__dirname, "..");
 }
 
+function copyMissingFiles(sourceDir, targetDir) {
+  if (!fs.existsSync(sourceDir)) return;
+  fs.mkdirSync(targetDir, { recursive: true });
+  for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
+    const sourcePath = path.join(sourceDir, entry.name);
+    const targetPath = path.join(targetDir, entry.name);
+    if (entry.isDirectory()) {
+      copyMissingFiles(sourcePath, targetPath);
+    } else if (!fs.existsSync(targetPath)) {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  }
+}
+
+function ensureUserAssetsFolder() {
+  const targetDir = path.join(app.getPath("userData"), ASSET_FOLDER_NAME);
+  const bundledDir = path.join(findProjectRoot(), ASSET_FOLDER_NAME);
+  copyMissingFiles(bundledDir, targetDir);
+  return targetDir;
+}
+
+function resolveAssetsFolder(projectRoot) {
+  if (app.isPackaged) return ensureUserAssetsFolder();
+  return path.join(projectRoot, ASSET_FOLDER_NAME);
+}
+
 function loadDesktopManifest() {
   const projectRoot = findProjectRoot();
-  const userManifestPath = path.join(projectRoot, "08_可替换素材", "状态映射.json");
+  const assetsFolder = resolveAssetsFolder(projectRoot);
+  const userManifestPath = path.join(assetsFolder, "状态映射.json");
   const manifestPath = fs.existsSync(userManifestPath)
     ? userManifestPath
     : path.join(projectRoot, "06_桌宠模板", "状态映射.json");
@@ -292,6 +320,7 @@ function loadDesktopManifest() {
     }
   }
   manifest.projectRoot = projectRoot;
+  manifest.assetsFolder = assetsFolder;
   return manifest;
 }
 
@@ -483,8 +512,10 @@ function registerIpc() {
 }
 
 function getAssetsFolder() {
+  if (desktopManifest && desktopManifest.assetsFolder) return desktopManifest.assetsFolder;
+  if (app.isPackaged) return ensureUserAssetsFolder();
   const projectRoot = desktopManifest && desktopManifest.projectRoot ? desktopManifest.projectRoot : findProjectRoot();
-  return path.join(projectRoot, "08_可替换素材");
+  return path.join(projectRoot, ASSET_FOLDER_NAME);
 }
 
 function openAssetsFolder() {

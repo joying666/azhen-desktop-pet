@@ -110,6 +110,20 @@ jobs:
               throw "Packaged EXE did not expose the expected replaceable asset formats."
             }
 
+            $doneAsset = $assets.assets | Where-Object { $_.stateKey -eq "done" } | Select-Object -First 1
+            if (-not $doneAsset -or -not $doneAsset.path -or [System.IO.Path]::GetExtension($doneAsset.path) -ne ".webm") {
+              throw "Packaged EXE did not expose a replaceable WebM asset."
+            }
+
+            $sourcePath = [System.Uri]::EscapeDataString($doneAsset.path)
+            $replaceResult = Invoke-RestMethod -Uri "http://127.0.0.1:17876/assets/replace?state=done&path=$sourcePath" -TimeoutSec 5
+            if ($replaceResult.ok -ne $true -or
+                $replaceResult.extension -ne ".webm" -or
+                $replaceResult.path -like "*app.asar*" -or
+                $replaceResult.path -like "*\resources\app\*") {
+              throw "Packaged EXE did not replace WebM in a writable user asset folder."
+            }
+
             $settingsOn = Invoke-RestMethod -Uri "http://127.0.0.1:17876/settings?hideOnFullScreen=1" -TimeoutSec 2
             if ($settingsOn.settings.hideOnFullScreen -ne $true) {
               throw "Packaged EXE did not enable hideOnFullScreen."
