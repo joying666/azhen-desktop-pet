@@ -73,15 +73,18 @@ jobs:
               }
             }
           } finally {
-            Get-CimInstance Win32_Process |
-              Where-Object { $_.CommandLine -like "*Azhen Desktop Pet*" -or $_.CommandLine -like "*azhen-desktop-pet*" } |
-              ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+            Get-Process -Name "Azhen Desktop Pet" -ErrorAction SilentlyContinue |
+              Stop-Process -Force -ErrorAction SilentlyContinue
             if ($process -and -not $process.HasExited) {
               Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
             }
           }
 
           if (-not $ok) {
+            Get-CimInstance Win32_Process |
+              Where-Object { $_.Name -like "*Azhen*" -or $_.ExecutablePath -like "*Azhen Desktop Pet*" } |
+              Select-Object ProcessId, Name, ExecutablePath, CommandLine |
+              Format-List
             throw "Windows EXE did not start or did not expose a healthy desktop-pet endpoint."
           }
 

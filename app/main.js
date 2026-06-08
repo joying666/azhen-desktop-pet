@@ -5,7 +5,7 @@ const path = require("path");
 const { pathToFileURL } = require("url");
 
 const EVENT_PORT = 17876;
-const LOG_PATH = path.join(__dirname, "桌宠运行日志.txt");
+const LOG_FILENAME = "桌宠运行日志.txt";
 const DEFAULT_SETTINGS = {
   sizePx: 420,
   x: null,
@@ -64,7 +64,13 @@ const WATER_PRESENTATION_MAX_SIZE = 560;
 const WATER_PRESENTATION_SCALE = 1.6;
 
 function log(message) {
-  fs.appendFileSync(LOG_PATH, `[${new Date().toISOString()}] ${message}\n`);
+  try {
+    const logPath = path.join(app.getPath("userData"), LOG_FILENAME);
+    fs.mkdirSync(path.dirname(logPath), { recursive: true });
+    fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${message}\n`);
+  } catch (_) {
+    // Logging should never stop the pet from starting, especially in packaged apps.
+  }
 }
 
 function constrainSize(value) {
