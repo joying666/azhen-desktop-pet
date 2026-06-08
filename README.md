@@ -62,7 +62,7 @@ Windows:
 npm run dist:win
 ```
 
-在 macOS 上直接构建 Windows 安装包可能受 Electron Builder/NSIS 环境影响。仓库已经配置 `.github/workflows/build.yml`，推送到 GitHub 后会自动在 Windows runner 上构建 Windows 产物。
+Windows 默认输出 portable `.exe`，下载后可直接运行，不需要安装。仓库已经配置 `.github/workflows/build.yml`，推送到 GitHub 后会自动在 Windows runner 上构建 Windows 产物。
 
 ## Skill
 
@@ -79,4 +79,3 @@ skills/agent-desktop-pet/
 - MOV 转透明 WebM
 - 可替换素材校验
 - 通用 Agent 事件协议
-
