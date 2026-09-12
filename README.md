@@ -2,7 +2,7 @@
 
 阿真桌面宠物是一个基于 Electron 的 Agent 状态桌宠。它可以根据通用 Agent 事件切换动作，也可以在设置页逐个替换每个状态的动态素材。
 
-## 支持的平台
+## 支持
 
 - macOS: 本机可直接 `npm start` 运行，也可以本地构建 DMG/ZIP
 - Windows: 通过 GitHub Actions 的 Windows runner 构建 portable EXE
