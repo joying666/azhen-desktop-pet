@@ -7,7 +7,6 @@
 - macOS: 本机可直接 `npm start` 运行，也可以本地构建 DMG/ZIP
 - Windows: 通过 GitHub Actions 的 Windows runner 构建 portable EXE
 
-## 状态槽位
 
 | 槽位 | 对应动作 | 默认事件 |
 |---|---|---|
